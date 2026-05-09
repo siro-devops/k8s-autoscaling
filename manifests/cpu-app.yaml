@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cpu-app
+  template:
+    metadata:
+      labels:
+        app: cpu-app
+    spec:
+      containers:
+      - name: cpu-app
+        image: nginx:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpu-app
+  namespace: default
+spec:
+  selector:
+    app: cpu-app
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
